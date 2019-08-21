@@ -1,0 +1,65 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,20 +15,6 @@ include_directories(
+     "${PROJECT_SOURCE_DIR}/include"
+ )
+ 
+-add_library(dublintraceroute SHARED
+-    src/common.cc
+-    src/dublin_traceroute.cc
+-    src/hop.cc
+-    src/udpv4probe.cc
+-    src/traceroute_results.cc
+-)
+-
+-# Set the shared library version
+-set_target_properties(dublintraceroute
+-    PROPERTIES
+-      SOVERSION 0.1.1
+-    )
+-
+ find_package(PkgConfig)
+ find_package(Threads REQUIRED)
+ find_package(libtins 3.4)
+@@ -41,20 +27,23 @@ endif (${libtins_FOUND})
+ 
+ pkg_search_module(JSONCPP REQUIRED jsoncpp)
+ 
+-add_executable(dublin-traceroute src/main.cc)
+-target_link_libraries(dublintraceroute ${CMAKE_THREAD_LIBS_INIT})
+-target_link_libraries(dublin-traceroute dublintraceroute)
+-target_link_libraries(dublintraceroute tins)
+-
+-target_link_libraries(dublintraceroute ${JSONCPP_LIBRARIES} jsoncpp)
+-target_include_directories(dublintraceroute PUBLIC ${JSONCPP_INCLUDE_DIRS})
++add_executable(dublin-traceroute
++    src/common.cc
++    src/dublin_traceroute.cc
++    src/hop.cc
++    src/udpv4probe.cc
++    src/traceroute_results.cc
++    src/main.cc
++)
++target_link_libraries(dublin-traceroute ${CMAKE_THREAD_LIBS_INIT})
++target_link_libraries(dublin-traceroute tins)
++target_link_libraries(dublin-traceroute ${JSONCPP_LIBRARIES} jsoncpp)
++target_include_directories(dublin-traceroute PUBLIC ${JSONCPP_INCLUDE_DIRS})
+ 
+ #set_property(TARGET dublintraceroute PROPERTY CXX_STANDARD 11)
+ #set_property(TARGET dublintraceroute PROPERTY CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+ 
+-add_dependencies(dublin-traceroute dublintraceroute)
+-
+ if (NOT CMAKE_INSTALL_BINDIR)
+     set(CMAKE_INSTALL_BINDIR "bin")
+ endif()
+@@ -63,7 +52,7 @@ if (NOT CMAKE_INSTALL_LIBDIR)
+     set(CMAKE_INSTALL_LIBDIR "lib")
+ endif()
+ 
+-install(TARGETS dublin-traceroute dublintraceroute
++install(TARGETS dublin-traceroute
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     )
