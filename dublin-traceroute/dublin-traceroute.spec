@@ -1,12 +1,14 @@
 Name: dublin-traceroute
 Version: 0.4.2
-Release: 3
+Release: 4
 Summary: Dublin Traceroute is a NAT-aware multipath tracerouting tool
 License: BSD
 BuildRequires: gcc-c++, cmake, libtins-devel, libtins, jsoncpp-devel, libpcap-devel
-Source: https://github.com/insomniacslk/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Source1: https://raw.githubusercontent.com/teknoraver/specfiles/master/%{name}.patch
-Patch0: %{name}.patch
+Source0: https://github.com/insomniacslk/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source1: https://raw.githubusercontent.com/teknoraver/specfiles/master/%{name}/01-static.patch
+Source2: https://raw.githubusercontent.com/teknoraver/specfiles/master/%{name}/02-cond_cxx11.patch
+Patch0: 01-static.patch
+Patch1: 02-cond_cxx11.patch
 Requires: libcap
 
 %description
@@ -19,6 +21,7 @@ but introduces a new technique for NAT detection.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 echo $RPM_BUILD_ROOT
