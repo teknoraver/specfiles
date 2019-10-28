@@ -1,13 +1,16 @@
+%global commit bcb868bde7f0203bbab69609f65d4088ba7398db
+%global date 20180613
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Summary:       Network Performance Testing Tool
 Name:          netperf
 Version:       2.7.1
-Release:       3
+Release:       0%{?commit:.%{date}git%{shortcommit}}%{?dist}
 
 Group:         System Environment/Base
 License:       Unknown
-URL:           http://www.netperf.org/
-Source:        https://github.com/HewlettPackard/%{name}/archive/master.tar.gz
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+URL:           https://hewlettpackard.github.io/netperf/
+Source:        https://github.com/HewlettPackard/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 
 BuildRequires: gcc, automake, texinfo, texinfo-tex
 
@@ -25,7 +28,7 @@ maintained by Rick Jones of HP.
 
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{commit}
 
 %build
 # gcc 4.4 users may want to disable the strict aliasing warnings
@@ -39,18 +42,13 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=${RPM_BUILD_ROOT}
 
 # Convert the main netperf document to other formats
-cd doc
-make %{name}.txt %{name}.html %{name}.xml pdf
-cd ..
+make -C doc %{name}.txt %{name}.html %{name}.xml pdf
 
 # We don't want to package the Makefile files in the examples directory
 rm -f doc/examples/Makefile*
 
 # Info
 rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
@@ -64,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 28 2019 Timothy Redaelli <tredaelli@redhat.com> - 2.7.1-0.20180613gitbcb868b
+- Use the correct versioning for a git release
+
 * Tue Oct  2 2018 Matteo Croce <mcroce@redhat.com> - 2.7.1-3
 - Fedora 29 upload
 
