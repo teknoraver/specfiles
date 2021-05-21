@@ -1,5 +1,5 @@
-%global commit bcb868bde7f0203bbab69609f65d4088ba7398db
-%global date 20180613
+%global commit 3bc455b23f901dae377ca0a558e1e32aa56b31c4
+%global date 20210521
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Summary:       Network Performance Testing Tool
@@ -8,7 +8,7 @@ Version:       2.7.1
 Release:       0%{?commit:.%{date}git%{shortcommit}}%{?dist}
 
 Group:         System Environment/Base
-License:       Unknown
+License:       MIT
 URL:           https://hewlettpackard.github.io/netperf/
 Source:        https://github.com/HewlettPackard/%{name}/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 
@@ -31,8 +31,8 @@ maintained by Rick Jones of HP.
 %setup -q -n %{name}-%{commit}
 
 %build
-# gcc 4.4 users may want to disable the strict aliasing warnings
-# CFLAGS="$RPM_OPT_FLAGS -Wno-strict-aliasing"
+# gcc 10 needs -fcommon because there are lot of duplicate symbols
+CFLAGS="$RPM_OPT_FLAGS -fcommon"
 ./autogen.sh
 %configure --enable-unixdomain --enable-sctp --enable-dccp
 make  %{_smp_mflags}
@@ -62,6 +62,9 @@ rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
 
 
 %changelog
+* Fri May 21 2021 Matteo Croce <mcroce@microsoft.com> - 2.7.1-0.20210521git3bc455b
+- Repackage with the new free license
+
 * Mon Oct 28 2019 Timothy Redaelli <tredaelli@redhat.com> - 2.7.1-0.20180613gitbcb868b
 - Use the correct versioning for a git release
 
