@@ -1,6 +1,6 @@
 Name: libtins
-Version: 4.2
-Release: 4
+Version: 4.3
+Release: 1
 Summary: High-level, multiplatform C++ network packet sniffing and crafting library
 License: BSD
 BuildRequires: gcc-c++, cmake, libpcap-devel, boost-devel
@@ -29,11 +29,11 @@ This package provides libtins headers for developers.
 # https://www.gnu.org/software/gcc/projects/cxx-status.html#cxx11
 ver=$(g++ -E -dM -o - - </dev/null |awk '/__GNUC__/{ver=$3}/__GNUC_MINOR__/{min=$3}/__GNUC_PATCHLEVEL__/{pl=$3}END{print ver*10000+min*100+pl}')
 [ $ver -ge 40801 ] && cxx11=-DLIBTINS_ENABLE_CXX11=1 || :
-%cmake . $cxx11 -DCMAKE_INSTALL_LIBDIR=%{_libdir}
-%make_build
+%cmake $cxx11 -DCMAKE_INSTALL_LIBDIR=%{_libdir}
+%cmake_build || %make_build
 
 %install
-%make_install
+%cmake_install || %make_install
 
 %check
 ctest -V %{?_smp_mflags}
