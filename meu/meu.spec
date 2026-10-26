@@ -1,11 +1,11 @@
 Name:           meu
 Version:        0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        M3U Editor Utility, a simple editor for .m3u playlists
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/teknoraver/meu
-Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -15,7 +15,11 @@ BuildRequires:  cmake(Qt6LinguistTools)
 BuildRequires:  desktop-file-utils
 
 # the SVG application icon is loaded through the Qt SVG icon engine plugin
+%if 0%{?suse_version}
+Requires:       libQt6Svg6
+%else
 Requires:       qt6-qtsvg
+%endif
 Requires:       hicolor-icon-theme
 
 %description
@@ -47,5 +51,8 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 
 %changelog
+* Tue Oct 27 2026 Matteo Croce <technoboy85@gmail.com> - 0.1-2
+- Fix the Qt SVG dependency on openSUSE
+
 * Mon Oct 26 2026 Matteo Croce <technoboy85@gmail.com> - 0.1-1
 - First release
